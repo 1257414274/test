@@ -1,0 +1,16 @@
+server:
+  port: 8088 #指定端口号
+  servlet:
+    context-path: /shop-back #指定统一路径
+spring:
+  datasource:
+    #数据库驱动
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    #数据库连接
+    url: jdbc:mysql://localhost:3306/mayujing
+    username: root #数据库账号
+    password: 123456 #数据库密码
+mybatis:
+  mapper-locations: classpath:/mapping/**/*.xml  #指定了 MyBatis 映射文件（*.xml）的位置
+  configuration:
+    map-underscore-to-camel-case: true  # 开启驼峰命名规则，默认true开启

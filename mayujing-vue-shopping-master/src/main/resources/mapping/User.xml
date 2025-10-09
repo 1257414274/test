@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.myj.shopping.dao.UserDao">
+
+	<resultMap id="User" type="com.myj.shopping.model.User" >
+		<result column="user_name" property="userName"/>
+		<result column="password" property="password"/>
+		<result column="store_id" property="storeId"/>
+		<result column="create_time" property="createTime"/>
+		<result column="update_time" property="updateTime"/>
+		<result column="del_flag" property="delFlag"/>
+	</resultMap>
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		id,
+		user_name,
+		password,
+		store_id,
+		create_time,
+		update_time,
+		del_flag
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultMap="User" parameterType="java.lang.Integer">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM user
+		 WHERE id = #{id}
+	</select>
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		 DELETE FROM user
+		 WHERE id = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.myj.shopping.model.User" >
+		 INSERT INTO user
+ 		(
+			 id,
+			 user_name,
+			 password,
+			 store_id,
+			 create_time,
+			 update_time,
+			 del_flag
+		) 
+		 VALUES 
+ 		(
+			 #{id},
+			 #{userName},
+			 #{password},
+			 #{storeId},
+			 #{createTime},
+			 #{updateTime},
+			 #{delFlag}
+ 		) 
+		 <selectKey keyProperty="id" resultType="Integer" order="AFTER">
+			 select LAST_INSERT_ID()
+		 </selectKey>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="com.myj.shopping.model.User" >
+		 UPDATE user
+ 		 <set> 
+			<if test="userName != null and userName != ''">
+				 user_name = #{userName},
+			</if>
+			<if test="password != null and password != ''">
+				 password = #{password},
+			</if>
+			<if test="storeId != null">
+				 store_id = #{storeId},
+			</if>
+			<if test="createTime != null">
+				 create_time = #{createTime},
+			</if>
+			<if test="updateTime != null">
+				 update_time = #{updateTime},
+			</if>
+			<if test="delFlag != null">
+				 del_flag = #{delFlag},
+			</if>
+
+ 		 </set>
+		 WHERE id = #{id}
+	</update>
+
+	<!-- list4Page 分页查询-->
+	<select id="list4Page" resultMap="User">
+		 SELECT 
+		 <include refid="Base_Column_List" />
+		 from user
+ 		 where 1=1  
+		<if test="record.id != null">
+			 and id = #{record.id} 
+		</if>
+		<if test="record.userName != null and record.userName != ''">
+			 and user_name = #{record.userName} 
+		</if>
+		<if test="record.password != null and record.password != ''">
+			 and password = #{record.password} 
+		</if>
+		<if test="record.storeId != null">
+			 and store_id = #{record.storeId} 
+		</if>
+		<if test="record.createTime != null">
+			 and create_time = #{record.createTime} 
+		</if>
+		<if test="record.updateTime != null">
+			 and update_time = #{record.updateTime} 
+		</if>
+		<if test="record.delFlag != null">
+			 and del_flag = #{record.delFlag} 
+		</if>
+		<if test="commonQueryParam != null">
+			<if test="commonQueryParam.order != null ">
+				 order by #{commonQueryParam.order}			<if test="commonQueryParam.sort != null ">				 #{commonQueryParam.sort}			</if>
+			</if>
+			<if test="commonQueryParam.start != null  and commonQueryParam.pageSize != null">
+				 limit #{commonQueryParam.start}, #{commonQueryParam.pageSize}
+			</if>
+		</if>
+	</select>
+	<!-- count 总数-->
+	<select id="count" resultType="int">
+		 SELECT 
+		 count(1) 
+		 from user
+ 		 where 1=1  
+		<if test="id != null">
+			 and id = #{id} 
+		</if>
+		<if test="userName != null and userName != ''">
+			 and user_name = #{userName} 
+		</if>
+		<if test="password != null and password != ''">
+			 and password = #{password} 
+		</if>
+		<if test="storeId != null">
+			 and store_id = #{storeId} 
+		</if>
+		<if test="createTime != null">
+			 and create_time = #{createTime} 
+		</if>
+		<if test="updateTime != null">
+			 and update_time = #{updateTime} 
+		</if>
+		<if test="delFlag != null">
+			 and del_flag = #{delFlag} 
+		</if>
+	</select>
+	<!-- list 查询-->
+	<select id="list" resultMap="User">
+		 SELECT 
+		 <include refid="Base_Column_List" />
+		 from user
+ 		 where 1=1  
+		<if test="id != null">
+			 and id = #{id} 
+		</if>
+		<if test="userName != null and userName != ''">
+			 and user_name = #{userName} 
+		</if>
+		<if test="password != null and password != ''">
+			 and password = #{password} 
+		</if>
+		<if test="storeId != null">
+			 and store_id = #{storeId} 
+		</if>
+		<if test="createTime != null">
+			 and create_time = #{createTime} 
+		</if>
+		<if test="updateTime != null">
+			 and update_time = #{updateTime} 
+		</if>
+		<if test="delFlag != null">
+			 and del_flag = #{delFlag} 
+		</if>
+	</select>
+	<select id="findUserByName" resultType="com.myj.shopping.model.User" parameterType="com.myj.shopping.model.http.UserReq">
+		select <include refid="Base_Column_List"></include> from user where user_name = #{userName}
+	</select>
+</mapper>
